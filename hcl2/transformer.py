@@ -16,7 +16,7 @@ START_LINE = "__start_line__"
 END_LINE = "__end_line__"
 
 
-Attribute = namedtuple("Attribute", ("key", "value"))
+Attribute = namedtuple("Attribute", ("key", "value", "start_line", "end_line"))
 
 
 # pylint: disable=missing-function-docstring,unused-argument
@@ -89,13 +89,18 @@ class DictTransformer(Transformer):
     def tuple(self, args: List) -> List:
         return [self.to_string_dollar(arg) for arg in self.strip_new_line_tokens(args)]
 
-    def object_elem(self, args: List) -> Dict:
+    @v_args(meta=True)
+    def object_elem(self, meta: Meta, args: List) -> Dict:
         # This returns a dict with a single key/value pair to make it easier to merge these
         # into a bigger dict that is returned by the "object" function
         key = self.strip_quotes(args[0])
         value = self.to_string_dollar(args[1])
-
-        return {key: value}
+        d: Dict[str, Any] = {}
+        d["value"] = value
+        if self.with_meta:
+            d[START_LINE] = meta.line
+            d[END_LINE] = meta.end_line
+        return {key:d}
 
     def object(self, args: List) -> Dict:
         args = self.strip_new_line_tokens(args)
@@ -136,12 +141,15 @@ class DictTransformer(Transformer):
 
         return result
 
-    def attribute(self, args: List) -> Attribute:
+    @v_args(meta=True)
+    def attribute(self, meta: Meta, args: List) -> Attribute:
         key = str(args[0])
         if key.startswith('"') and key.endswith('"'):
             key = key[1:-1]
         value = self.to_string_dollar(args[1])
-        return Attribute(key, value)
+        if self.with_meta:
+            return Attribute(key, value, meta.line, meta.end_line)
+        return Attribute(key, value, 0, 0)
 
     def conditional(self, args: List) -> str:
         args = self.strip_new_line_tokens(args)
@@ -181,7 +189,12 @@ class DictTransformer(Transformer):
             if isinstance(arg, Attribute):
                 if arg.key in result:
                     raise RuntimeError(f"{arg.key} already defined")
-                result[arg.key] = arg.value
+                d: Dict[str, Any] = {}
+                d["value"] = arg.value
+                if self.with_meta:
+                    d[START_LINE] = arg.start_line
+                    d[END_LINE] = arg.end_line
+                result[arg.key] = d
                 attributes.add(arg.key)
             else:
                 # This is a block.
@@ -236,6 +249,9 @@ class DictTransformer(Transformer):
         return '"%s"' % "\n".join(lines)
 
     def new_line_or_comment(self, args: List) -> _DiscardType:
+        for arg in args:
+            if arg != '\n':
+                print(f"{arg}")
         return Discard
 
     def for_tuple_expr(self, args: List) -> str:

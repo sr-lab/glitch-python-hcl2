@@ -14,9 +14,11 @@ HEREDOC_TRIM_PATTERN = re.compile(r"<<-([a-zA-Z][a-zA-Z0-9._-]+)\n([\s\S]*)\1", 
 
 START_LINE = "__start_line__"
 END_LINE = "__end_line__"
+COMMENTS = "__comments__"
 
 
 Attribute = namedtuple("Attribute", ("key", "value", "start_line", "end_line"))
+Comment = namedtuple("Comment", ("value", "start_line", "end_line"))
 
 
 # pylint: disable=missing-function-docstring,unused-argument
@@ -87,7 +89,23 @@ class DictTransformer(Transformer):
         return f"[*]{args_str}"
 
     def tuple(self, args: List) -> List:
-        return [self.to_string_dollar(arg) for arg in self.strip_new_line_tokens(args)]
+        comments: Dict[str, Any] = {}
+        comments[COMMENTS] = []
+        result = []
+        for arg in self.strip_new_line_tokens(args):
+            if isinstance(arg, list) and isinstance(arg[0], Comment):
+                for comment in arg:
+                    d: Dict[str, Any] = {}
+                    d["value"] = comment.value
+                    if self.with_meta:
+                        d[START_LINE] = comment.start_line
+                        d[END_LINE] = comment.end_line
+                    comments[COMMENTS].append(d)
+            else:
+                result.append(self.to_string_dollar(arg))
+        if comments[COMMENTS] != []:
+            result.append(comments)
+        return result
 
     @v_args(meta=True)
     def object_elem(self, meta: Meta, args: List) -> Dict:
@@ -105,8 +123,22 @@ class DictTransformer(Transformer):
     def object(self, args: List) -> Dict:
         args = self.strip_new_line_tokens(args)
         result: Dict[str, Any] = {}
+
+        comments: Dict[str, Any] = {}
+        comments[COMMENTS] = []
         for arg in args:
-            result.update(arg)
+            if isinstance(arg, list) and isinstance(arg[0], Comment):
+                for comment in arg:
+                    d: Dict[str, Any] = {}
+                    d["value"] = comment.value
+                    if self.with_meta:
+                        d[START_LINE] = comment.start_line
+                        d[END_LINE] = comment.end_line
+                    comments[COMMENTS].append(d)
+            else:
+                result.update(arg)
+        if comments[COMMENTS] != []:
+            result.update(comments)
         return result
 
     def function_call(self, args: List) -> str:
@@ -119,8 +151,15 @@ class DictTransformer(Transformer):
     def arguments(self, args: List) -> List:
         return args
 
-    def new_line_and_or_comma(self, args: List) -> _DiscardType:
-        return Discard
+    def new_line_and_or_comma(self, args: List):
+        result = []
+        for arg in args:
+            if isinstance(arg, list) and isinstance(arg[0], Comment):
+                for comment in arg:
+                    result.append(comment)
+        if result == []:
+            return Discard
+        return result
 
     @v_args(meta=True)
     def block(self, meta: Meta, args: List) -> Dict:
@@ -196,6 +235,16 @@ class DictTransformer(Transformer):
                     d[END_LINE] = arg.end_line
                 result[arg.key] = d
                 attributes.add(arg.key)
+            elif isinstance(arg, list) and isinstance(arg[0], Comment):
+                if COMMENTS not in result:
+                    result[COMMENTS] = []
+                for comment in arg:
+                    d: Dict[str, Any] = {}
+                    d["value"] = comment.value
+                    if self.with_meta:
+                        d[START_LINE] = comment.start_line
+                        d[END_LINE] = comment.end_line
+                    result[COMMENTS].append(d)
             else:
                 # This is a block.
                 for key, value in arg.items():
@@ -248,11 +297,30 @@ class DictTransformer(Transformer):
 
         return '"%s"' % "\n".join(lines)
 
-    def new_line_or_comment(self, args: List) -> _DiscardType:
+    @v_args(meta=True)
+    def new_line_or_comment(self, meta: Meta, args: List):
+        comments = []
+        line = 0
         for arg in args:
-            if arg != '\n':
-                print(f"{arg}")
-        return Discard
+            if arg == '\n':
+                line += 1
+            else:
+                #print(f"arg: {arg}")
+                if self.with_meta:
+                    start_line = meta.line + line
+                    end_line = start_line + len(arg.splitlines()) - 1
+                    comments.append(Comment(arg.value, start_line, end_line))
+                else:
+                    comments.append(Comment(arg.value, 0, 0))
+                if len(arg.splitlines()) > 1:   
+                    line += len(arg.splitlines()) - 1 # multiline comment does not contain the final \n
+                else: 
+                    line += 1
+                
+        if comments == []:
+            return Discard
+        return comments
+            
 
     def for_tuple_expr(self, args: List) -> str:
         args = self.strip_new_line_tokens(args)

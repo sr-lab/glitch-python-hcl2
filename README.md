@@ -1,10 +1,8 @@
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9c7cdf082b044abdab378fa82795b5a5)](https://www.codacy.com/gh/amplify-education/python-hcl2/dashboard?utm_source=github.com&utm_medium=referral&utm_content=amplify-education/python-hcl2&utm_campaign=Badge_Grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/9c7cdf082b044abdab378fa82795b5a5)](https://www.codacy.com/gh/amplify-education/python-hcl2/dashboard?utm_source=github.com&utm_medium=referral&utm_content=amplify-education/python-hcl2&utm_campaign=Badge_Coverage)
-[![Build Status](https://travis-ci.org/amplify-education/python-hcl2.svg?branch=master)](https://travis-ci.org/amplify-education/python-hcl2)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/amplify-education/python-hcl2/master/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/python-hcl2.svg)](https://pypi.org/project/python-hcl2/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/python-hcl2.svg)](https://pypi.python.org/pypi/python-hcl2)
-[![Downloads](https://img.shields.io/badge/dynamic/json.svg?label=downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpython-hcl2%2Frecent&query=data.last_month&colorB=brightgreen&suffix=%2FMonth)](https://pypistats.org/packages/python-hcl2)
+
+# Notice
+
+This is a fork of Amplify's [Python HCL2](https://github.com/amplify-education/python-hcl2) repository. This repository went through minor changes to work better with [GLITCH](https://github.com/sr-lab/GLITCH) and as the changes concern only the structure representation to be compatible with [GLITCH](https://github.com/sr-lab/GLITCH) we decided not to request updates for the upstream project. The two projects diverge in the representation of some structures and pushing new changes upstream doesn't make sense.
 
 # Python HCL2
 

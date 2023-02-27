@@ -14,7 +14,7 @@ def get_requirements():
 
 setup(
     name='glitch-python-hcl2',
-    version='0.1.1',
+    version='0.1.2',
     author='João Gonçalves',
     author_email='joao.marques.goncalves@tecnico.ulisboa.pt',
     url="https://github.com/joaotgoncalves/python-hcl2",
@@ -35,6 +35,7 @@ setup(
     keywords='',
     python_requires='>=3.7', 
     packages=find_packages(),
+    include_package_data=True,
     description="A parser for HCL2",
     long_description=get_long_description(),
     long_description_content_type='text/markdown',

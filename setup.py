@@ -1,5 +1,5 @@
 import os.path
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def get_long_description():
     """Reads the long description from the README"""
@@ -14,7 +14,7 @@ def get_requirements():
 
 setup(
     name='glitch-python-hcl2',
-    version='0.1.0',
+    version='0.1.1',
     author='João Gonçalves',
     author_email='joao.marques.goncalves@tecnico.ulisboa.pt',
     url="https://github.com/joaotgoncalves/python-hcl2",
@@ -31,11 +31,12 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
-        'Typing :: Typed',
     ],
     keywords='',
     python_requires='>=3.7', 
+    packages=find_packages(),
     description="A parser for HCL2",
-    long_description_content_type='text/markdown', 
+    long_description=get_long_description(),
+    long_description_content_type='text/markdown',
     install_requires=get_requirements(),
 )

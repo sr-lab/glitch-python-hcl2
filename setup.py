@@ -14,7 +14,7 @@ def get_requirements():
 
 setup(
     name='glitch-python-hcl2',
-    version='0.1.2',
+    version='0.1.4',
     author='João Gonçalves',
     author_email='joao.marques.goncalves@tecnico.ulisboa.pt',
     url="https://github.com/joaotgoncalves/python-hcl2",

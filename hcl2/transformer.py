@@ -21,6 +21,7 @@ Attribute = namedtuple("Attribute", ("key", "value", "start_line", "end_line"))
 Comment = namedtuple("Comment", ("value", "start_line", "end_line"))
 
 comments = []
+id = None
 
 
 # pylint: disable=missing-function-docstring,unused-argument
@@ -246,13 +247,16 @@ class DictTransformer(Transformer):
                     d[END_LINE] = c.end_line
                 result[COMMENTS].append(d)
             comments = []
-
+        
         args = self.strip_new_line_tokens(args)
         attributes = set()
         result: Dict[str, Any] = {}
-        
-        if args == [] and comments != []:
+        global comments
+        global id
+
+        if args == [] and id == None and comments != []:
             add_comments()
+        id = None
 
         for arg in args:
             if isinstance(arg, Attribute):
@@ -390,4 +394,6 @@ class DictTransformer(Transformer):
         # seems to return a token object instead of the str
         # So treat it like a regular rule
         # In this case we just convert the whole thing to a string
+        global id
+        id = str(value[0])
         return str(value[0])

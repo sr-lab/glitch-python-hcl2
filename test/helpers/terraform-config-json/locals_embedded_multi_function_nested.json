@@ -1,8 +1,20 @@
 {
   "locals": [
     {
-      "multi_function": "${substr(split(\"-\", \"us-west-2\")[0], 0, 1)}",
-      "multi_function_embedded": "${substr(split(\"-\", \"us-west-2\")[0], 0, 1)}"
+      "multi_function": {
+        "value": "${substr(split(\"-\", \"us-west-2\")[0], 0, 1)}"
+      },
+      "multi_function_embedded": {
+        "value": "${substr(split(\"-\", \"us-west-2\")[0], 0, 1)}"
+      }
+    }
+  ],
+  "__comments__": [
+    {
+      "value": "# provided with and without the quotes, to validate the test output.\n"
+    },
+    {
+      "value": "# both values should evaluate to the same values\n"
     }
   ]
 }

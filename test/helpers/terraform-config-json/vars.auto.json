@@ -1,7 +1,11 @@
 {
-  "foo": "bar",
-  "arr": [
-    "foo",
-    "bar"
-  ]
+  "foo": {
+    "value": "bar"
+  },
+  "arr": {
+    "value": [
+      "foo",
+      "bar"
+    ]
+  }
 }

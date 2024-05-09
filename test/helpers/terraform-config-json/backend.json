@@ -2,19 +2,27 @@
   "provider": [
     {
       "aws": {
-        "region": "${var.region}"
+        "region": {
+          "value": "${var.region}"
+        }
       }
     },
     {
       "aws": {
-        "region": "${var.backup_region}",
-        "alias": "backup"
+        "region": {
+          "value": "${var.backup_region}"
+        },
+        "alias": {
+          "value": "backup"
+        }
       }
     }
   ],
   "terraform": [
     {
-      "required_version": "0.12"
+      "required_version": {
+        "value": "0.12"
+      }
     },
     {
       "backend": [
@@ -25,13 +33,25 @@
       "required_providers": [
         {
           "aws": {
-            "source": "hashicorp/aws"
+            "value": {
+              "source": {
+                "value": "hashicorp/aws"
+              }
+            }
           },
           "null": {
-            "source": "hashicorp/null"
+            "value": {
+              "source": {
+                "value": "hashicorp/null"
+              }
+            }
           },
           "template": {
-            "source": "hashicorp/template"
+            "value": {
+              "source": {
+                "value": "hashicorp/template"
+              }
+            }
           }
         }
       ]

@@ -3,27 +3,47 @@
     {
       "aws_s3_bucket": {
         "name": {
-          "bucket": "name",
-          "acl": "log-delivery-write",
+          "bucket": {
+            "value": "name"
+          },
+          "acl": {
+            "value": "log-delivery-write"
+          },
           "lifecycle_rule": [
             {
-              "id": "to_glacier",
-              "prefix": "",
-              "enabled": true,
+              "id": {
+                "value": "to_glacier"
+              },
+              "prefix": {
+                "value": ""
+              },
+              "enabled": {
+                "value": true
+              },
               "expiration": [
                 {
-                  "days": 365
+                  "days": {
+                    "value": 365
+                  }
                 }
               ],
               "transition": {
-                "days": 30,
-                "storage_class": "GLACIER"
+                "value": {
+                  "days": {
+                    "value": 30
+                  },
+                  "storage_class": {
+                    "value": "GLACIER"
+                  }
+                }
               }
             }
           ],
           "versioning": [
             {
-              "enabled": true
+              "enabled": {
+                "value": true
+              }
             }
           ]
         }
@@ -33,10 +53,18 @@
   "module": [
     {
       "bucket_name": {
-        "source": "s3_bucket_name",
-        "name": "audit",
-        "account": "${var.account}",
-        "region": "${var.region}"
+        "source": {
+          "value": "s3_bucket_name"
+        },
+        "name": {
+          "value": "audit"
+        },
+        "account": {
+          "value": "${var.account}"
+        },
+        "region": {
+          "value": "${var.region}"
+        }
       }
     }
   ]

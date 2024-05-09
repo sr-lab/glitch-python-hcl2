@@ -3,53 +3,141 @@
     {
       "null_resource": {
         "multiline_comment_multiline": {
-          "triggers": []
+          "triggers": {
+            "value": []
+          }
         }
       }
     },
     {
       "null_resource": {
         "multiline_comment_single_line_before_closing_bracket": {
-          "triggers": []
+          "triggers": {
+            "value": []
+          }
         }
       }
     },
     {
       "null_resource": {
         "multiline_comment_single_line_between_brackets": {
-          "triggers": []
+          "triggers": {
+            "value": []
+          }
         }
       }
     },
     {
       "null_resource": {
         "multiline_comment_single_line_after_opening_bracket": {
-          "triggers": []
+          "triggers": {
+            "value": []
+          }
         }
       }
     },
     {
       "null_resource": {
         "multiline_comment_multiple_single_element": {
-          "triggers": [
-            2
-          ]
+          "triggers": {
+            "value": [
+              2
+            ]
+          }
         }
       }
+    }
+  ],
+  "__comments__": [
+    {
+      "value": "// test new line braces style\n"
+    },
+    {
+      "value": "# another comment\n"
+    },
+    {
+      "value": "/*\none last comment\n*/"
+    },
+    {
+      "value": "/* \"a\",\n        \"b\" */"
+    },
+    {
+      "value": "/* \"a\", \"b\" */"
+    },
+    {
+      "value": "/* \"a\", \"b\" */"
+    },
+    {
+      "value": "/* \"a\", \"b\" */"
+    },
+    {
+      "value": "/* \"a\",\n        \"b\" */"
+    },
+    {
+      "value": "# \"c\"\n"
+    },
+    {
+      "value": "# comment 1\n"
+    },
+    {
+      "value": "# comment 2\n"
+    },
+    {
+      "value": "# comment 3\n"
+    },
+    {
+      "value": "# comment 4\n"
+    },
+    {
+      "value": "# comment 5\n"
+    },
+    {
+      "value": "# comment 6\n"
+    },
+    {
+      "value": "# comment 7\n"
+    },
+    {
+      "value": "# comment 8\n"
+    },
+    {
+      "value": "# comment 1\n"
+    },
+    {
+      "value": "/* comment 2 */"
+    },
+    {
+      "value": "# comment 3\n"
+    },
+    {
+      "value": "# comment 4\n"
+    },
+    {
+      "value": "# comment 5\n"
     }
   ],
   "variable": [
     {
       "some_var2": {
-        "description": "description",
-        "type": "${string}",
-        "default": "${cidrsubnets(\"10.0.0.0/24\", 2, 2)}"
+        "description": {
+          "value": "description"
+        },
+        "type": {
+          "value": "${string}"
+        },
+        "default": {
+          "value": "${cidrsubnets(\"10.0.0.0/24\", 2, 2)}"
+        }
       }
     },
     {
       "some_var2": {
-        "description": "description",
-        "default": "${concat([{'1': '1'}], [{'2': '2'}])}"
+        "description": {
+          "value": "description"
+        },
+        "default": {
+          "value": "${concat([{'1': '1'}], [{'2': '2'}])}"
+        }
       }
     }
   ]

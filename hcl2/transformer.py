@@ -14,11 +14,19 @@ HEREDOC_TRIM_PATTERN = re.compile(r"<<-([a-zA-Z][a-zA-Z0-9._-]+)\n([\s\S]*)\1", 
 
 START_LINE = "__start_line__"
 END_LINE = "__end_line__"
+START_COLUMN = "__start_column__"
+END_COLUMN = "__end_column__"
 COMMENTS = "__comments__"
 
 
-Attribute = namedtuple("Attribute", ("key", "value", "start_line", "end_line"))
-Comment = namedtuple("Comment", ("value", "start_line", "end_line"))
+Attribute = namedtuple(
+    "Attribute", 
+    ("key", "value", "start_line", "end_line", "start_column", "end_column")
+)
+Comment = namedtuple(
+    "Comment", 
+    ("value", "start_line", "end_line")
+)
 
 comments = []
 id = None
@@ -108,6 +116,8 @@ class DictTransformer(Transformer):
         if self.with_meta:
             d[START_LINE] = meta.line
             d[END_LINE] = meta.end_line
+            d[START_COLUMN] = meta.column
+            d[END_COLUMN] = meta.end_column
         return {key:d}
 
     def object(self, args: List) -> Dict:
@@ -126,7 +136,7 @@ class DictTransformer(Transformer):
                     if isinstance(v, dict) or isinstance(v, list):
                         d[n] = remove_meta_info(v)
                     else:
-                        if n == START_LINE or n == END_LINE:
+                        if n in [START_LINE, END_LINE, START_COLUMN, END_COLUMN]:
                             continue
                         else:
                             d[n] = v
@@ -184,6 +194,8 @@ class DictTransformer(Transformer):
                 {
                     START_LINE: meta.line,
                     END_LINE: meta.end_line,
+                    START_COLUMN: meta.column,
+                    END_COLUMN: meta.end_column,
                 }
             )
 
@@ -201,8 +213,10 @@ class DictTransformer(Transformer):
             key = key[1:-1]
         value = self.to_string_dollar(args[1])
         if self.with_meta:
-            return Attribute(key, value, meta.line, meta.end_line)
-        return Attribute(key, value, 0, 0)
+            return Attribute(
+                key, value, meta.line, meta.end_line, meta.column, meta.end_column
+            )
+        return Attribute(key, value, 0, 0, 0, 0)
 
     def conditional(self, args: List) -> str:
         args = self.strip_new_line_tokens(args)
@@ -267,6 +281,8 @@ class DictTransformer(Transformer):
                 if self.with_meta:
                     d[START_LINE] = arg.start_line
                     d[END_LINE] = arg.end_line
+                    d[START_COLUMN] = arg.start_column
+                    d[END_COLUMN] = arg.end_column
                 result[arg.key] = d
                 attributes.add(arg.key)
             else:

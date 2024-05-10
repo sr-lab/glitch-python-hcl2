@@ -20,13 +20,10 @@ COMMENTS = "__comments__"
 
 
 Attribute = namedtuple(
-    "Attribute", 
-    ("key", "value", "start_line", "end_line", "start_column", "end_column")
+    "Attribute",
+    ("key", "value", "start_line", "end_line", "start_column", "end_column"),
 )
-Comment = namedtuple(
-    "Comment", 
-    ("value", "start_line", "end_line")
-)
+Comment = namedtuple("Comment", ("value", "start_line", "end_line"))
 
 comments = []
 id = None
@@ -118,7 +115,7 @@ class DictTransformer(Transformer):
             d[END_LINE] = meta.end_line
             d[START_COLUMN] = meta.column
             d[END_COLUMN] = meta.end_column
-        return {key:d}
+        return {key: d}
 
     def object(self, args: List) -> Dict:
         args = self.strip_new_line_tokens(args)
@@ -261,7 +258,7 @@ class DictTransformer(Transformer):
                     d[END_LINE] = c.end_line
                 result[COMMENTS].append(d)
             comments = []
-        
+
         args = self.strip_new_line_tokens(args)
         attributes = set()
         result: Dict[str, Any] = {}
@@ -295,8 +292,19 @@ class DictTransformer(Transformer):
                         result[key].append(value)
                     else:
                         result[key] = [value]
-                    
-                    if key in ["resource", "data", "variable", "module", "output", "locals"] and comments != []:
+
+                    if (
+                        key
+                        in [
+                            "resource",
+                            "data",
+                            "variable",
+                            "module",
+                            "output",
+                            "locals",
+                        ]
+                        and comments != []
+                    ):
                         add_comments()
 
         return result
@@ -345,7 +353,7 @@ class DictTransformer(Transformer):
         global comments
         line = 0
         for arg in args:
-            if arg == '\n':
+            if arg == "\n":
                 line += 1
             else:
                 if self.with_meta:
@@ -354,13 +362,14 @@ class DictTransformer(Transformer):
                     comments.append(Comment(arg.value, start_line, end_line))
                 else:
                     comments.append(Comment(arg.value, 0, 0))
-                if len(arg.splitlines()) > 1:   
-                    line += len(arg.splitlines()) - 1 # multiline comment does not contain the final \n
-                else: 
+                if len(arg.splitlines()) > 1:
+                    line += (
+                        len(arg.splitlines()) - 1
+                    )  # multiline comment does not contain the final \n
+                else:
                     line += 1
-                
+
         return Discard
-            
 
     def for_tuple_expr(self, args: List) -> str:
         args = self.strip_new_line_tokens(args)

@@ -5,4 +5,5 @@ include *.md
 include *.rst
 include hcl2/hcl2.lark
 include hcl2/py.typed
+include requirements.txt
 prune test

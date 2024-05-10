@@ -2,16 +2,20 @@ import os.path
 from setuptools import setup, find_packages
 
 
+this_directory = os.path.abspath(os.path.dirname(__file__))
+
+
 def get_long_description():
     """Reads the long description from the README"""
-    this_directory = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(this_directory, "README.md"), encoding="utf-8") as file:
         return file.read()
 
 
 def get_requirements():
     """Reads the installation requirements from requirements.txt"""
-    with open("requirements.txt", encoding="utf8") as reqfile:
+    with open(
+        os.path.join(this_directory, "requirements.txt"), encoding="utf8"
+    ) as reqfile:
         return [
             line
             for line in reqfile.read().split("\n")
@@ -21,7 +25,7 @@ def get_requirements():
 
 setup(
     name="glitch-python-hcl2",
-    version="0.1.4",
+    version="0.2.2",
     author="João Gonçalves",
     author_email="joao.marques.goncalves@tecnico.ulisboa.pt",
     url="https://github.com/joaotgoncalves/python-hcl2",
